@@ -14,14 +14,24 @@ TOKEN = re.compile(r"[a-z][a-z0-9]{1,}")
 STOPWORDS = set("the and for with from this that into over under using use are was were have has how why what when where who which about between their they them our your can not but also via based study paper approach method methods results".split())
 
 
+def build_search_query(query: str) -> str:
+    """Search a phrase in titles or abstracts, rather than loosely matching words.
+
+    Quotes inside user input are stripped to keep this simple query builder safe.
+    """
+    phrase = " ".join(query.replace('"', " ").split())
+    if not phrase:
+        raise ValueError("Search query must not be empty")
+    return f'(ti:"{phrase}" OR abs:"{phrase}")'
+
+
 def fetch_papers(query: str, max_results: int = 10) -> list[dict]:
     """Fetch and normalize public arXiv metadata; no API key required."""
-    if not query.strip():
-        raise ValueError("Search query must not be empty")
     if not 1 <= max_results <= 100:
         raise ValueError("max_results must be between 1 and 100")
+    search_query = build_search_query(query)
     params = urllib.parse.urlencode({
-        "search_query": f"all:{query.strip()}",
+        "search_query": search_query,
         "start": 0,
         "max_results": max_results,
         "sortBy": "relevance",
