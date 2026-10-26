@@ -31,7 +31,8 @@ Web UI (planned) → backend API (planned) → arXiv ingestion + database (plann
 - Week 4: integration, usability, demo, and deployment
 
 ## Limitations
-- The current retrieval query is simple and depends on arXiv service availability.
+- Retrieval now searches an exact phrase in arXiv titles or abstracts. This improves candidate precision but can miss relevant papers using different terminology; an expanded-query strategy is future work.
+- Live relevance of the updated results still needs to be verified against the arXiv service.
 - TF-IDF similarity is lexical, not truly semantic. It may miss conceptually related papers using different vocabulary.
 - No citation graph, database, web UI, deployment, or user accounts yet.
 - Avoid presenting proposed components as implemented.
